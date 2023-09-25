@@ -1,0 +1,105 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Sep 25 11:40:26 2023
+
+@author: gorelyi
+
+РИ2.Python программа поиска modbus устройств.
+11
+"""
+import sys
+import json
+import time
+import os
+from pymodbus.client.sync import ModbusSerialClient
+from pymodbus.exceptions import ModbusException
+from itertools import product
+
+def search_modbus_devices(port, baudrate, parity, stopbits, start_address, end_address, function_code, register):
+    client = ModbusSerialClient(
+        method='rtu',
+        port=port,
+        baudrate=int(baudrate),
+        parity=parity,
+        stopbits=int(stopbits),
+        timeout=0.11
+    )
+
+    devices_found = []
+
+    for address in range(start_address, end_address + 1):
+        client.unit_id = address
+
+        try:
+            response = client.read_holding_registers(register, 1, unit=function_code)
+            if response.isError():
+                print(f"Device {address} error: {response}")
+            else:
+                devices_found.append(address)
+                print(f"Device {address} responded.")
+        except ModbusException as error:
+            print(f"Device {address} error: {str(error)}")
+
+    return devices_found
+
+def save_configuration(configuration, filename):
+    with open(filename, 'w') as config_file:
+        json.dump(configuration, config_file, indent=4)
+
+def load_configuration(filename):
+    with open(filename, 'r') as config_file:
+        configuration = json.load(config_file)
+
+    # Преобразуйте значения в int, где это необходимо
+    configuration['baudrate'] = int(configuration['baudrate'])
+    configuration['stopbits'] = float(configuration['stopbits'])
+    configuration['start_address'] = int(configuration['start_address'])
+    configuration['end_address'] = int(configuration['end_address'])
+    configuration['function_code'] = int(configuration['function_code'])
+    configuration['register'] = int(configuration['register'])
+
+    return configuration
+
+def select_configuration():
+    print("Select configuration:")
+    print("1. Load from file")
+    print("2. Enter manually")
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        filename = input("Enter configuration filename: ")
+        return load_configuration(filename)
+    elif choice == "2":
+        configuration = {}
+        configuration['port'] = input("Enter COM port: ")
+        configuration['baudrate'] = input("Enter baudrate: ")
+        configuration['parity'] = input("Enter parity (N, E, O): ")
+        configuration['stopbits'] = input("Enter stopbits (1, 1.5, 2): ")
+        configuration['start_address'] = int(input("Enter start address: "))
+        configuration['end_address'] = int(input("Enter end address: "))
+        configuration['function_code'] = int(input("Enter function code: "))
+        configuration['register'] = int(input("Enter register: "))
+
+        return configuration
+    else:
+        print("Invalid choice.")
+        sys.exit(1)
+
+def main():
+    configuration = select_configuration()
+
+    if configuration is None:
+        print("Configuration is empty.")
+        sys.exit(1)
+
+    save_choice = input("Do you want to save this configuration? (y/n): ")
+    if save_choice.lower() == 'y':
+        filename = input("Enter filename to save configuration: ")
+        save_configuration(configuration, filename)
+
+    devices_found = search_modbus_devices(**configuration)
+    print(f"Devices found: {devices_found}")
+
+if __name__ == "__main__":
+    main()
+
