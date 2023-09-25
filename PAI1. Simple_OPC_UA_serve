@@ -1,0 +1,41 @@
+import random
+from opcua import ua, Server
+import time
+
+# Генерация случайного числа для переменной "Testfield"
+Testfield = random.randint(0, 100)
+
+# Создание OPC-UA сервера
+server = Server()
+url = "opc.tcp://localhost:4840"
+server.set_endpoint(url)
+
+# Создание пространства имен сервера
+uri = "urn:myopcserver"
+idx = server.register_namespace(uri)
+
+# Создание объекта Node для переменной "Testfield"
+var_node = server.get_objects_node().add_object(idx, "Testfield")
+var = var_node.add_variable(idx, "Testfield", 0)
+
+# Установка значения переменной "Testfield"
+var.set_value(Testfield)
+
+# Запуск OPC-UA сервера
+server.start()
+
+try:
+    while True:
+        # Генерация нового случайного числа для переменной "Testfield"
+        Testfield = random.randint(0, 100)
+        # Установка нового значения переменной "Testfield"
+        var.set_value(Testfield)
+        # Печать нового значения в консоль
+        print(f"New value for Testfield: {Testfield}")
+
+        # Ожидание 1 секунды перед генерацией следующего числа
+        time.sleep(1)
+
+except KeyboardInterrupt:
+    # Остановка OPC-UA сервера при нажатии Ctrl+C
+    server.stop()
