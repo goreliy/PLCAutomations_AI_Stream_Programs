@@ -1,4 +1,4 @@
-## Description
+## Description    EN/RU
 
 This folder contains the following files:
 - data_input.py: a Python file that allows data input using sliders and saves them in JSON format.
