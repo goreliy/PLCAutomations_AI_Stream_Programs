@@ -1,4 +1,4 @@
-# Modbus Register Explorer
+# Modbus RTU Register Scanner
 
 This is a program that enables you to search for the registers to which any Modbus device can respond and create a list of registers for reading.
 
