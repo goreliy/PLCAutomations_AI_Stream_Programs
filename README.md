@@ -21,3 +21,7 @@ The Modbus Device Discovery section contains programs that focus on the discover
 Explore programs related to creating a simple OPC UA server. This section includes code examples that demonstrate the creation of an OPC UA server for data exchange and communication with other devices.
 
 Stay updated with the latest AI-driven code examples and implementations from our YouTube channel! Be sure to check out the related videos for in-depth explanations and tutorials.
+
+## Modbus Register Explorer
+
+This is a program that enables you to search for the registers to which any Modbus device can respond and create a list of registers for reading.
