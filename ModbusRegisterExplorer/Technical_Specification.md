@@ -1,3 +1,55 @@
+## Program Title: Modbus RTU Register Scanner
+
+**Description:**
+Modbus RTU Register Scanner is a console application designed for searching readable registers of Modbus RTU devices. The program allows for configuring Modbus parameters, setting search ranges, and saving search results in JSON format.
+
+## Functional Requirements:
+
+1. **Modbus Parameter Configuration:**
+   - Baud rate (bits/sec)
+   - Parity (odd, even, none)
+   - Stop bits (1, 2)
+   - Device address (0 to 255)
+   - Port number (1 to 65535)
+   - Timeout in milliseconds (100 to 10000)
+
+2. **Setting Search Ranges:**
+   - Starting register (0 to 65535)
+   - Ending register (0 to 65535)
+
+3. **Stopping and Resuming Search.** When the search is stopped, the program saves the current search state and can resume it later.
+
+4. **Saving search results in JSON format.** For each found register, the following data is saved:
+   - Device address
+   - Register number
+   - Register value
+   - Query execution time
+
+5. **Inputting search parameters through the console** during program startup or using saved settings from separate files.
+
+6. **Validation of entered Modbus parameters and device address.** Checking the correctness of the device address within the range of 0 to 255.
+
+7. **Indication of waiting time and execution progress** using a progress bar.
+
+8. **Displaying registers and their values in decimal and hexadecimal formats.**
+
+9. **Handling errors** when reading registers or receiving no response from Modbus devices. The program should continue to the next registers without interrupting the search.
+
+## File Structure:
+
+1. Configuration file with program settings. File format - JSON.
+2. Files with saved settings. File format - JSON.
+
+**Initial Configuration Files:**
+1. config.json - file with program settings.
+2. settings.json - file with saved settings.
+
+> Note: The program should implement the logic of working with Modbus RTU devices and use standard libraries for working with JSON, console input-output, and progress bars.
+
+
+
+
+
 Название программы: Modbus RTU Register Scanner
 
 # Описание:
